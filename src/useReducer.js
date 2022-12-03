@@ -8,24 +8,15 @@ function UseReducer({name}) {
     // const [value,setValue] = React.useState('');
     // const [error,setError] = React.useState(false);
     // const [loading, setloading ]= React.useState(false)
-
-
-
-
-
-
-
-
-
    React.useEffect(()=>{
     console.log("empezando el evento");
     if(!!state.loading){
         setTimeout(()=>{
             console.log("validando")
             if(state.value === SECURITY_CODE){
-             dispatch({type:'CONFIRM'});
+             dispatch({type: actionTypes.confirm});
             } else{
-                dispatch({type:'ERROR'});
+                dispatch({type: actionTypes.error});
             }
 
 
@@ -50,7 +41,7 @@ if (!state.deleted && !state.confirmed) {
             placeholder="Codigo de Seguridad"
             value={state.value}
             onChange={(event)=>{
-                dispatch({type:'WRITE',payload: event.target.value});
+                dispatch({type: actionTypes.write,payload: event.target.value});
                 // onWrite(event.target.value);
                 // setValue(event.target.value);
             }
@@ -59,7 +50,7 @@ if (!state.deleted && !state.confirmed) {
             />
             <button
                 onClick={()=>{
-                    dispatch({type:'CHECK'});
+                    dispatch({type: actionTypes.check });
                 
                 //    onCheck();
                     // setloading(true);
@@ -74,7 +65,7 @@ if (!state.deleted && !state.confirmed) {
                 <p>Confirma elimnar</p>
                 <button
                 onClick={()=>{
-                dispatch({type:'DELETE'});
+                dispatch({type: actionTypes.delete });
 
                     // onDelete();
                     
@@ -82,7 +73,7 @@ if (!state.deleted && !state.confirmed) {
                 >Si, elinar</button>
                 <button
                 onClick={()=>{
-                dispatch({type:'RESET'});
+                dispatch({type:actionTypes.reset});
 
                     // onReset();
                 }}
@@ -95,7 +86,7 @@ if (!state.deleted && !state.confirmed) {
             <p>Eliminado con exito</p>
             <button
                 onClick={()=>{
-                dispatch({type:'RESET'});
+                dispatch({type:actionTypes.reset});
 
                     // onReset();
                 }}
@@ -156,33 +147,41 @@ const initialState = {
 //             }
 //     }
 // }
+const actionTypes = {
+    confirm: 'CONFIRM',
+    error: 'ERROR',
+    write:'WRITE',
+    delete: 'DELETE',
+    check: 'CHECK',
+    reset: 'RESET'
+}
 
 const reducerObject = (state, payload)=> ({
-    'CONFIRM':{
+    [actionTypes.confirm]:{
         ...state,
         error:false,
         loading: false,
         confirmed:true,
     },
 
-    'ERROR':{
+    [actionTypes.error]:{
         ...state,
         error:true,
         loading: false,
     },
-     'WRITE':{
+     [actionTypes.write]:{
          ...state,
          value: payload,
     },
-    'CHECK':{
+    [actionTypes.check]:{
         ...state,
         loading: true,
     },
-    'DELETE':{
+    [actionTypes.delete]:{
         ...state,
         deleted:true,
     },
-    'RESET':{
+    [actionTypes.reset]:{
         ...state,
         confirmed:false,
         deleted: false,
