@@ -5,18 +5,25 @@ const SECURITY_CODE = 'paulaydaniel';
 function UseReducer({name}) {
     const [state, dispatch]= React.useReducer(reducer, initialState);
     
-    // const [value,setValue] = React.useState('');
-    // const [error,setError] = React.useState(false);
-    // const [loading, setloading ]= React.useState(false)
+    const onConfirm = () => dispatch({type: actionTypes.confirm});
+    const onError = () => dispatch({type: actionTypes.error});
+    const onCheck = () => dispatch({type: actionTypes.check});
+    const onDelete = () => dispatch({type: actionTypes.delete});
+    const onReset = () => dispatch({type: actionTypes.reset});
+    const onWrite =  ({target:{value}}) =>{
+        dispatch({type: actionTypes.write, payload: value})};
+    
+
+
    React.useEffect(()=>{
     console.log("empezando el evento");
     if(!!state.loading){
         setTimeout(()=>{
             console.log("validando")
             if(state.value === SECURITY_CODE){
-             dispatch({type: actionTypes.confirm});
+             onConfirm();
             } else{
-                dispatch({type: actionTypes.error});
+                onError();
             }
 
 
@@ -40,42 +47,25 @@ if (!state.deleted && !state.confirmed) {
             <input 
             placeholder="Codigo de Seguridad"
             value={state.value}
-            onChange={(event)=>{
-                dispatch({type: actionTypes.write,payload: event.target.value});
-                // onWrite(event.target.value);
-                // setValue(event.target.value);
-            }
-                
-            }
+            onChange={onWrite}
             />
             <button
-                onClick={()=>{
-                    dispatch({type: actionTypes.check });
-                
-                //    onCheck();
-                    // setloading(true);
-                    // setError(false)
-                }}
+                onClick={onCheck}
                 >comprobar</button>
         </div>
     );
    }else if (!!state.confirmed && !state.deleted) {
         return(
             <React.Fragment>
-                <p>Confirma elimnar</p>
+                <p>Confirma eliminar</p>
+                <button
+                onClick={onDelete}
+                >Si, eliminar</button>
                 <button
                 onClick={()=>{
-                dispatch({type: actionTypes.delete });
+                // dispatch({type:actionTypes.reset});
 
-                    // onDelete();
-                    
-                }}
-                >Si, elinar</button>
-                <button
-                onClick={()=>{
-                dispatch({type:actionTypes.reset});
-
-                    // onReset();
+                    onReset();
                 }}
                 >No, Cancelar</button>
             </React.Fragment>
@@ -85,11 +75,7 @@ if (!state.deleted && !state.confirmed) {
         <React.Fragment>
             <p>Eliminado con exito</p>
             <button
-                onClick={()=>{
-                dispatch({type:actionTypes.reset});
-
-                    // onReset();
-                }}
+                onClick={onReset} //para no ser redundante en la llama a las arrowfuntion
                 >Reset, volver atras</button>
         </React.Fragment>
     )
